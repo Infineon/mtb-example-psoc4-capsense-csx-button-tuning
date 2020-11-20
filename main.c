@@ -1,13 +1,13 @@
 /******************************************************************************
-* File Name:   main.c
+* File Name: main.c
 *
 * Description: This is the source code for the PSoC 4 CapSense CSX Button
-*              Tuning for ModusToolbox.
+*              Tuning code example for ModusToolbox.
 *
 * Related Document: See README.md
 *
 *******************************************************************************
-* (c) 2019-2020, Cypress Semiconductor Corporation. All rights reserved.
+* (c) 2020, Cypress Semiconductor Corporation. All rights reserved.
 *******************************************************************************
 * This software, including source code, documentation and related materials
 * ("Software"), is owned by Cypress Semiconductor Corporation or one of its
@@ -66,7 +66,7 @@ cy_stc_scb_ezi2c_context_t ezi2c_context;
 #if CY_CAPSENSE_BIST_EN
 /* Variables to hold sensor parasitic capacitances */
 uint32_t tx_cp = 0, rx_cp = 0;
-cy_en_capsense_bist_status_t status;
+cy_en_capsense_bist_status_t rx_status, tx_status;
 #endif /* CY_CAPSENSE_BIST_EN */
 
 
@@ -91,6 +91,7 @@ static void measure_sensor_cp(void);
 *  - initial setup of device
 *  - initialize CapSense
 *  - initialize tuner communication
+*  - perform Cp measurement if Built-in Self test (BIST) is enabled
 *  - scan touch input continuously
 *
 * Return:
@@ -113,10 +114,11 @@ int main(void)
     /* Enable global interrupts */
     __enable_irq();
 
-    initialize_capsense();
-
     /* Initialize EZI2C */
     initialize_capsense_tuner();
+
+    /* Initialize CapSense */
+    initialize_capsense();
 
     /* Start the first scan */
     Cy_CapSense_ScanAllWidgets(&cy_capsense_context);
@@ -128,14 +130,22 @@ int main(void)
             /* Process all widgets */
             Cy_CapSense_ProcessAllWidgets(&cy_capsense_context);
 
-            /* Establishes synchronized with the CapSense Tuner tool */
+            /* Turn LED ON/OFF based on button status */
+            if(Cy_CapSense_IsWidgetActive(CY_CAPSENSE_BUTTON0_WDGT_ID, &cy_capsense_context) == 1)
+            {
+                Cy_GPIO_Write(CYBSP_LED_BTN0_PORT, CYBSP_LED_BTN0_NUM, CYBSP_LED_STATE_ON);
+            }
+            else
+            {
+                Cy_GPIO_Write(CYBSP_LED_BTN0_PORT, CYBSP_LED_BTN0_NUM, CYBSP_LED_STATE_OFF);
+            }
+
+            /* Establishes synchronized communication with the CapSense Tuner tool */
             Cy_CapSense_RunTuner(&cy_capsense_context);
 
 #if CY_CAPSENSE_BIST_EN
-
-            /* Measure the self capacitance of tx and rx electrode using BIST */
+            /* Measure the self capacitance of tx and rx electrodes using BIST */
             measure_sensor_cp();
-
 #endif /* CY_CAPSENSE_BIST_EN */
 
             /* Start the next scan */
@@ -149,13 +159,13 @@ int main(void)
 * Function Name: initialize_capsense
 ********************************************************************************
 * Summary:
-*  This function initializes the CapSense and configure the CapSense
+*  This function initializes the CapSense and configures the CapSense
 *  interrupt.
 *
 *******************************************************************************/
 static void initialize_capsense(void)
 {
-    cy_status status = CYRET_SUCCESS;
+    cy_status status = CY_RET_SUCCESS;
 
     /* CapSense interrupt configuration */
     const cy_stc_sysint_t capsense_interrupt_config =
@@ -167,20 +177,24 @@ static void initialize_capsense(void)
     /* Capture the CSD HW block and initialize it to the default state. */
     status = Cy_CapSense_Init(&cy_capsense_context);
 
-    if (CYRET_SUCCESS == status)
+    if (CY_RET_SUCCESS != status)
     {
-        /* Initialize CapSense interrupt */
-        Cy_SysInt_Init(&capsense_interrupt_config, capsense_isr);
-        NVIC_ClearPendingIRQ(capsense_interrupt_config.intrSrc);
-        NVIC_EnableIRQ(capsense_interrupt_config.intrSrc);
-
-        /* Initialize the CapSense firmware modules. */
-        status = Cy_CapSense_Enable(&cy_capsense_context);
+        /* CapSense Initialization failed */
+        CY_ASSERT(CY_ASSERT_FAILED);
     }
 
-    if(status != CYRET_SUCCESS)
+    /* Initialize CapSense interrupt */
+    Cy_SysInt_Init(&capsense_interrupt_config, capsense_isr);
+    NVIC_ClearPendingIRQ(capsense_interrupt_config.intrSrc);
+    NVIC_EnableIRQ(capsense_interrupt_config.intrSrc);
+
+    /* Initialize the CapSense firmware modules. */
+    status = Cy_CapSense_Enable(&cy_capsense_context);
+    if(status != CY_RET_SUCCESS)
     {
-        CY_ASSERT(CY_ASSERT_FAILED);
+        /* This status could fail before tuning the sensors correctly.
+         * Ensure that this function passes after the CapSense sensors are tuned
+         * as per procedure give in the Readme.md file */
     }
 }
 
@@ -231,9 +245,11 @@ static void initialize_capsense_tuner(void)
                             sizeof(cy_capsense_tuner), sizeof(cy_capsense_tuner),
                             &ezi2c_context);
 
+    /* Enables the SCB block for the EZI2C operation. */
     Cy_SCB_EZI2C_Enable(CYBSP_EZI2C_HW);
 
-    if(CY_RET_SUCCESS != status)
+    /* EZI2C initialization failed */
+    if(status != CY_SCB_EZI2C_SUCCESS)
     {
         CY_ASSERT(CY_ASSERT_FAILED);
     }
@@ -258,22 +274,22 @@ static void ezi2c_isr(void)
 * Function Name: measure_sensor_cp
 ********************************************************************************
 * Summary:
-*  Measure the self capacitance of Tx and Rx electrodes.
+*  Measures the self capacitance of Tx and Rx electrodes in Femto Farads and
+*  store its value in the global variables tx_cp and rx_cp respectively.
 *
 *******************************************************************************/
 static void measure_sensor_cp(void)
 {
-    /* Measure the self capacitance of RX electrode */
-    status = Cy_CapSense_MeasureCapacitanceSensor(CY_CAPSENSE_BUTTON0_WDGT_ID,\
-                                         CY_CAPSENSE_BUTTON0_RX0_ID,\
-                                         &rx_cp, &cy_capsense_context);
+    /* Measure the self capacitance of Rx electrode */
+    rx_status = Cy_CapSense_MeasureCapacitanceSensor(CY_CAPSENSE_BUTTON0_WDGT_ID,
+                                                  CY_CAPSENSE_BUTTON0_RX0_ID,
+                                                &rx_cp, &cy_capsense_context);
 
-    /* Measure the self capacitance of TX electrode */
-    status |= Cy_CapSense_MeasureCapacitanceSensor(CY_CAPSENSE_BUTTON0_WDGT_ID,\
-                                          CY_CAPSENSE_BUTTON0_TX0_ID,\
-                                          &tx_cp, &cy_capsense_context);
+    /* Measure the self capacitance of Tx electrode */
+    tx_status = Cy_CapSense_MeasureCapacitanceSensor(CY_CAPSENSE_BUTTON0_WDGT_ID,
+                                                   CY_CAPSENSE_BUTTON0_TX0_ID,
+                                                 &tx_cp, &cy_capsense_context);
 }
 #endif /* CY_CAPSENSE_BIST_EN */
-
 
 /* [] END OF FILE */

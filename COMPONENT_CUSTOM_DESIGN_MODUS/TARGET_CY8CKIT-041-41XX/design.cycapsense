@@ -6,7 +6,7 @@
     </DesignProperties>
     <GeneralProperties>
         <Property id="REGULAR_RC_IIR_FILTER_EN" value="false"/>
-        <Property id="REGULAR_IIR_RC_N" value="128"/>
+        <Property id="REGULAR_IIR_RC_N" value="64"/>
         <Property id="REGULAR_RC_MEDIAN_FILTER_EN" value="false"/>
         <Property id="REGULAR_RC_AVERAGE_FILTER_EN" value="false"/>
         <Property id="REGULAR_RC_AVERAGE_SAMPLE_SIZE" value="SAMPLE_4"/>
@@ -46,7 +46,7 @@
     </GeneralProperties>
     <CsdProperties>
         <Property id="CSD_AUTOTUNE" value="DISABLE"/>
-        <Property id="CSD_MOD_CLK_DIVIDER" value="1"/>
+        <Property id="CSD_MOD_CLK_DIVIDER" value="2"/>
         <Property id="CSD_INACTIVE_SNS_CONNECTION" value="GROUND"/>
         <Property id="CSD_CHARGE_TRANSFER" value="SOURCING"/>
         <Property id="CSD_IDAC_ROW_COL_ALIGN_EN" value="true"/>
@@ -77,10 +77,10 @@
         <Property id="CSX_IDAC_AUTOCAL_EN" value="true"/>
         <Property id="CSX_RAWCOUNT_CAL_LEVEL" value="40"/>
         <Property id="CSX_INIT_SWITCH_RES" value="MEDIUM"/>
-        <Property id="CSX_SCAN_SWITCH_RES" value="MEDIUM"/>
-        <Property id="CSX_INIT_SHIELD_SWITCH_RES" value="HIGH"/>
-        <Property id="CSX_SCAN_SHIELD_SWITCH_RES" value="HIGH"/>
-        <Property id="CSX_FINE_INIT_TIME" value="4"/>
+        <Property id="CSX_SCAN_SWITCH_RES" value="LOW"/>
+        <Property id="CSX_INIT_SHIELD_SWITCH_RES" value="MEDIUM"/>
+        <Property id="CSX_SCAN_SHIELD_SWITCH_RES" value="LOW"/>
+        <Property id="CSX_FINE_INIT_TIME" value="10"/>
         <Property id="CSX_CALIBRATION_ERROR" value="20"/>
         <Property id="CSX_MFS_DIVIDER_OFFSET_F1" value="1"/>
         <Property id="CSX_MFS_DIVIDER_OFFSET_F2" value="2"/>
@@ -89,13 +89,13 @@
         <Widget id="Button0" type="CSX_BUTTON">
             <WidgetProperties>
                 <Property id="DIPLEXING" value="false"/>
-                <Property id="MAX_POS_X" value="300"/>
-                <Property id="MAX_POS_Y" value="300"/>
+                <Property id="MAX_POS_X" value="100"/>
+                <Property id="MAX_POS_Y" value="100"/>
                 <Property id="FINGER_CP" value="0.16"/>
-                <Property id="SNS_CLK" value="16"/>
-                <Property id="ROW_SNS_CLK" value="16"/>
+                <Property id="SNS_CLK" value="4"/>
+                <Property id="ROW_SNS_CLK" value="4"/>
                 <Property id="SNS_CLK_SOURCE" value="AUTO"/>
-                <Property id="TX_CLK" value="35"/>
+                <Property id="TX_CLK" value="16"/>
                 <Property id="TX_CLK_SOURCE" value="AUTO"/>
                 <Property id="RESOLUTION" value="RES12BIT"/>
                 <Property id="NUM_CONV" value="20"/>
@@ -113,7 +113,7 @@
                 <Property id="LOW_BSLN_RST" value="30"/>
                 <Property id="HYSTERESIS" value="10"/>
                 <Property id="ON_DEBOUNCE" value="3"/>
-                <Property id="VELOCITY" value="45000"/>
+                <Property id="VELOCITY" value="2500"/>
                 <Property id="IIR_FILTER" value="false"/>
                 <Property id="IIR_FILTER_COEFF" value="128"/>
                 <Property id="MEDIAN_FILTER" value="false"/>
@@ -172,7 +172,7 @@
             <Electrodes>
                 <Electrode id="Rx0" kind="Column">
                     <ElectrodeProperties>
-                        <Property id="IDAC0" value="57"/>
+                        <Property id="IDAC0" value="32"/>
                         <Property id="IDAC1" value="32"/>
                         <Property id="IDAC2" value="32"/>
                         <Property id="PINS" value="Dedicated pin"/>
