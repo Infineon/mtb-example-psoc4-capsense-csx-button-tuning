@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Design version="12" device_library_hint_path="../../../mtb_shared/mtb-pdl-cat2/latest-v1.X/devicesupport.xml" xmlns="http://cypress.com/xsd/cydesignfile_v3">
-    <ToolInfo version="2.2.0.2801"/>
+<Design version="12" device_library_hint_path="../../../../../../mtw_psoc4ces_24/mtb_shared/mtb-pdl-cat2/release-v1.3.0/devicesupport.xml" xmlns="http://cypress.com/xsd/cydesignfile_v3">
+    <ToolInfo version="2.4.0.5721"/>
     <Devices>
         <Device mpn="CY8C4045AZI-S413">
             <BlockConfig>
@@ -11,25 +11,15 @@
                 </Block>
                 <Block location="csd[0].csd[0]">
                     <Alias value="CYBSP_CSD"/>
-                    <Personality template="m0s8csd" version="1.0">
+                    <Personality template="m0s8csd" version="1.1">
                         <Param id="CapSenseEnable" value="true"/>
                         <Param id="CapSenseCore" value="0"/>
-                        <Param id="SensorCount" value="14"/>
-                        <Param id="CapacitorCount" value="3"/>
-                        <Param id="SensorName0" value="Cmod"/>
-                        <Param id="SensorName1" value="CintA"/>
-                        <Param id="SensorName2" value="CintB"/>
-                        <Param id="SensorName3" value="Button0_Rx0"/>
-                        <Param id="SensorName4" value="Button0_Tx"/>
-                        <Param id="SensorName5" value="Button1_Rx0"/>
-                        <Param id="SensorName6" value="Button1_Tx"/>
-                        <Param id="SensorName7" value="Button2_Rx0"/>
-                        <Param id="SensorName8" value="Button2_Tx"/>
-                        <Param id="SensorName9" value="LinearSlider0_Sns0"/>
-                        <Param id="SensorName10" value="LinearSlider0_Sns1"/>
-                        <Param id="SensorName11" value="LinearSlider0_Sns2"/>
-                        <Param id="SensorName12" value="LinearSlider0_Sns3"/>
-                        <Param id="SensorName13" value="LinearSlider0_Sns4"/>
+                        <Param id="SensorCount" value="4"/>
+                        <Param id="CapacitorCount" value="2"/>
+                        <Param id="SensorName0" value="CintA"/>
+                        <Param id="SensorName1" value="CintB"/>
+                        <Param id="SensorName2" value="Button0_Rx0"/>
+                        <Param id="SensorName3" value="Button0_Tx"/>
                         <Param id="CapSenseConfigurator" value="0"/>
                         <Param id="CapSenseTuner" value="0"/>
                         <Param id="CsdAdcEnable" value="false"/>
@@ -41,12 +31,12 @@
                         <Param id="vref" value="-1"/>
                         <Param id="operClkDivider" value="1"/>
                         <Param id="azTime" value="5"/>
-                        <Param id="csdInitTime" value="25"/>
+                        <Param id="csdInitTime" value="10"/>
                         <Param id="inFlash" value="true"/>
                         <Param id="CsdIdacEnable" value="false"/>
                         <Param id="CsdIdacAselect" value="CY_CSDIDAC_GPIO"/>
                         <Param id="CsdIdacBselect" value="CY_CSDIDAC_DISABLED"/>
-                        <Param id="csdIdacInitTime" value="25"/>
+                        <Param id="csdIdacInitTime" value="10"/>
                         <Param id="idacInFlash" value="true"/>
                     </Personality>
                 </Block>
@@ -391,9 +381,6 @@
                 </Net>
                 <Mux name="sense" location="csd[0].csd[0]">
                     <Arm>
-                        <Port name="ioss[0].port[4].pin[1].analog[0]"/>
-                    </Arm>
-                    <Arm>
                         <Port name="ioss[0].port[4].pin[2].analog[0]"/>
                     </Arm>
                     <Arm>
@@ -404,33 +391,6 @@
                     </Arm>
                     <Arm>
                         <Port name="ioss[0].port[1].pin[3].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[1].pin[5].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[1].pin[3].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[1].pin[6].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[1].pin[3].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[0].pin[0].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[0].pin[1].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[0].pin[2].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[0].pin[3].analog[0]"/>
-                    </Arm>
-                    <Arm>
-                        <Port name="ioss[0].port[0].pin[6].analog[0]"/>
                     </Arm>
                 </Mux>
             </Netlist>

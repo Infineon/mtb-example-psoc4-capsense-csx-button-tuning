@@ -6,7 +6,7 @@
     </DesignProperties>
     <GeneralProperties>
         <Property id="REGULAR_RC_IIR_FILTER_EN" value="false"/>
-        <Property id="REGULAR_IIR_RC_N" value="64"/>
+        <Property id="REGULAR_IIR_RC_N" value="128"/>
         <Property id="REGULAR_RC_MEDIAN_FILTER_EN" value="false"/>
         <Property id="REGULAR_RC_AVERAGE_FILTER_EN" value="false"/>
         <Property id="REGULAR_RC_AVERAGE_SAMPLE_SIZE" value="SAMPLE_4"/>
@@ -53,8 +53,8 @@
         <Property id="NUM_CENTROIDS" value="1"/>
     </GeneralProperties>
     <CsdProperties>
-        <Property id="CSD_AUTOTUNE" value="DISABLE"/>
-        <Property id="CSD_MOD_CLK_DIVIDER" value="2"/>
+        <Property id="CSD_AUTOTUNE" value="HWTH"/>
+        <Property id="CSD_MOD_CLK_DIVIDER" value="1"/>
         <Property id="CSD_INACTIVE_SNS_CONNECTION" value="GROUND"/>
         <Property id="CSD_CHARGE_TRANSFER" value="SOURCING"/>
         <Property id="CSD_IDAC_ROW_COL_ALIGN_EN" value="true"/>
@@ -104,7 +104,7 @@
                 <Property id="SNS_CLK" value="4"/>
                 <Property id="ROW_SNS_CLK" value="4"/>
                 <Property id="SNS_CLK_SOURCE" value="AUTO"/>
-                <Property id="TX_CLK" value="16"/>
+                <Property id="TX_CLK" value="23"/>
                 <Property id="TX_CLK_SOURCE" value="AUTO"/>
                 <Property id="RESOLUTION" value="RES12BIT"/>
                 <Property id="NUM_CONV" value="20"/>
