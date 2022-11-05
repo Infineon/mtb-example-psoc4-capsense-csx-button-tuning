@@ -8,7 +8,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2020-2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2020-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -163,7 +163,7 @@ int main(void)
 *******************************************************************************/
 static void initialize_capsense(void)
 {
-    cy_status status = CY_RET_SUCCESS;
+    uint32_t status = CY_CAPSENSE_STATUS_SUCCESS;
 
     /* CapSense interrupt configuration */
     const cy_stc_sysint_t capsense_interrupt_config =
@@ -175,7 +175,7 @@ static void initialize_capsense(void)
     /* Capture the CSD HW block and initialize it to the default state. */
     status = Cy_CapSense_Init(&cy_capsense_context);
 
-    if (CY_RET_SUCCESS != status)
+    if (CY_CAPSENSE_STATUS_SUCCESS != status)
     {
         /* CapSense Initialization failed */
         CY_ASSERT(CY_ASSERT_FAILED);
@@ -188,7 +188,7 @@ static void initialize_capsense(void)
 
     /* Initialize the CapSense firmware modules. */
     status = Cy_CapSense_Enable(&cy_capsense_context);
-    if(status != CY_RET_SUCCESS)
+    if (CY_CAPSENSE_STATUS_SUCCESS != status)
     {
         /* This status could fail before tuning the sensors correctly.
          * Ensure that this function passes after the CapSense sensors are tuned
@@ -214,7 +214,7 @@ static void capsense_isr(void)
 * Function Name: initialize_capsense_tuner
 ********************************************************************************
 * Summary:
-* - EZI2C module to communicate with the CapSense Tuner tool.
+*  EZI2C module to communicate with the CapSense Tuner tool.
 *
 *******************************************************************************/
 static void initialize_capsense_tuner(void)
@@ -239,7 +239,7 @@ static void initialize_capsense_tuner(void)
      * the Tuner or the Bridge Control Panel can read this buffer but you can
      * connect only one tool at a time.
      */
-    Cy_SCB_EZI2C_SetBuffer1(CYBSP_EZI2C_HW, (uint8 *)&cy_capsense_tuner,
+    Cy_SCB_EZI2C_SetBuffer1(CYBSP_EZI2C_HW, (uint8_t *)&cy_capsense_tuner,
                             sizeof(cy_capsense_tuner), sizeof(cy_capsense_tuner),
                             &ezi2c_context);
 
